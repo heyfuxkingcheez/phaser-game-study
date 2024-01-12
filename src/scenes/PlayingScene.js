@@ -5,7 +5,7 @@ import Mob from '../characters/Mob';
 import TopBar from '../ui/TopBar';
 import ExpBar from '../ui/ExpBar';
 import { setBackground } from '../utils/backgroundManager';
-import { addMobEvent } from '../utils/mobManager';
+import { addMobEvent, removeOldestMobEvent } from '../utils/mobManager';
 import { addAttackEvent } from '../utils/attackManager';
 import { pause } from '../utils/pauseManager';
 
@@ -44,11 +44,11 @@ export default class PlayingScene extends Phaser.Scene {
 
         // Mob
         this.m_mobs = this.physics.add.group();
-        this.m_mobs.add(new Mob(this, 0, 0, 'mob2', 'mob2_anim', 10));
+        this.m_mobs.add(new Mob(this, 0, 0, 'mob1', 'mob1_anim', 10));
         this.m_mobEvents = [];
 
         // scene, repeatGap, mobTexture, mobAnim, mobHp, mobDropRate
-        addMobEvent(this, 1000, 'mob2', 'mob2_anim', 10, 0.3);
+        addMobEvent(this, 1000, 'mob1', 'mob1_anim', 10, 0.4);
 
         // Attack
         this.m_weaponDynamic = this.add.group();
@@ -193,5 +193,24 @@ export default class PlayingScene extends Phaser.Scene {
 
     afterLevelUp() {
         this.m_topBar.gainLevel();
+
+        // 레벨이 2, 3, 4, ..가 되면 등장하는 몹을 변경해줍니다.
+        // 이전 몹 이벤트를 지우지 않으면 난이도가 너무 어려워지기 때문에 이전 몹 이벤트를 지워줍니다.
+        // 레벨이 높아질 수록 강하고 아이텝 드랍율이 낮은 몹을 등장시킵니다.
+        // repeatGap은 동일하게 설정했지만 레벨이 올라갈수록 더 짧아지도록 조절하셔도 됩니다.
+
+        switch (this.m_topBar.m_level) {
+            case 2:
+                addMobEvent(this, 1000, 'mob2', 'mob2_anim', 20, 0.3);
+                break;
+            case 3:
+                removeOldestMobEvent(this);
+                addMobEvent(this, 1000, 'mob3', 'mob3_anim', 20, 0.25);
+                break;
+            case 4:
+                removeOldestMobEvent(this);
+                addMobEvent(this, 1000, 'mob4', 'mob4_anim', 20, 0.25);
+                break;
+        }
     }
 }
