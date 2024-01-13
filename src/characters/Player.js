@@ -21,12 +21,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // 해당 오브젝트가 물리적으로 얼만큼의 면적을 차지할 지 설정하는 함수입니다.
         // 디폴트로 이미지 사이즈로 설정되는데, 그러면 추후 몹을 추가했을 때 너무 잘 부딪히는 느낌이 드므로 원본 이미지보다 약간 작게 설정해주었습니다.
-        this.setBodySize(28, 32);
+        this.setBodySize(24, 28);
 
         this.m_moving = false;
 
-        // 공격 받을 수 있는지 여부를 뜻하는 멤버 변수입니다.
-        // static 공격의 경우 처음 접촉했을 때 쿨타임을 주지 않으면 매 프레임당 계속해서 공격한 것으로 처리되므로 해당 변수로 쿨타임을 만들게 되었습니다.
+        // 플레이어가 공격받을 수 있는지 여부를 나타내는 멤버 변수입니다.
+        // 공격받은 후 쿨타임을 주기 위해 사용합니다.
         this.m_canBeAttacked = true;
 
         // scene, player, maxHp
@@ -34,11 +34,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     move(vector) {
-        let PLAYER_SPEED = 2;
+        // console.log(vector);
+        let PLAYER_SPEED = 1.5;
 
         this.x += vector[0] * PLAYER_SPEED;
         this.y += vector[1] * PLAYER_SPEED;
 
+        // 캐릭터 이미지 원본은 왼쪽을 바라보고 있습니다.
+        // flipX 프로퍼티는 boolean 값을 받아 x축 방향으로 뒤집혀있을지 아닐지를 설정합니다.
+        // player가 왼쪽으로 이동할 때는 flipX = false,
+        // player가 오른쪽쪽으로 이동할 때는 flipX = true로 설정해 적절한 방향을 바라보게 해 줍니다.
         if (vector[0] === -1) this.flipX = false;
         else if (vector[0] === 1) this.flipX = true;
     }

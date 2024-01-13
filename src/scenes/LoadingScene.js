@@ -32,7 +32,6 @@ import gameClearOgg from '../assets/sounds/gameClear.ogg';
 import pauseInOgg from '../assets/sounds/pauseIn.ogg';
 import pauseOutOgg from '../assets/sounds/pauseOut.ogg';
 
-// 사용할 모든 asset(image, sprite image, audio, font 등)을 load해 놓습니다.
 export default class LoadingScene extends Phaser.Scene {
     constructor() {
         // super에 파라미터로 넘겨주는 string이 해당 scene의 identifier가 됩니다.
@@ -112,7 +111,7 @@ export default class LoadingScene extends Phaser.Scene {
 
     create() {
         this.add.text(20, 20, 'Loading game...');
-        this.scene.start('playGame');
+        this.scene.start('mainScene');
 
         // MOBS
         this.anims.create({
